@@ -147,6 +147,8 @@ class ResourceList(with_metaclass(ResourceMeta, Resource)):
         schema_kwargs = getattr(self, 'get_schema_kwargs', dict())
         schema_kwargs.update({'many': True})
 
+        self.before_marshmallow(args, kwargs)
+
         schema = compute_schema(self.schema,
                                 schema_kwargs,
                                 qs,
@@ -219,6 +221,9 @@ class ResourceList(with_metaclass(ResourceMeta, Resource)):
     def after_post(self, result):
         pass
 
+    def before_marshmallow(self, args, kwargs):
+        pass
+
 
 class ResourceDetail(with_metaclass(ResourceMeta, Resource)):
 
@@ -235,6 +240,8 @@ class ResourceDetail(with_metaclass(ResourceMeta, Resource)):
         if obj is None:
             raise ObjectNotFound({'pointer': ''}, 'Object Not Found')
         qs = QSManager(request.args, self.schema)
+
+        self.before_marshmallow(args, kwargs)
 
         schema = compute_schema(self.schema,
                                 getattr(self, 'get_schema_kwargs', dict()),
@@ -338,6 +345,9 @@ class ResourceDetail(with_metaclass(ResourceMeta, Resource)):
         pass
 
     def after_delete(self, result):
+        pass
+
+    def before_marshmallow(self, args, kwargs):
         pass
 
 
