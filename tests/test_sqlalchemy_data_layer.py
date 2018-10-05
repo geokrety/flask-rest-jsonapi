@@ -39,6 +39,7 @@ def person_model(base):
         birth_date = Column(DateTime)
         gender = Column(Enum('male', 'female'), nullable=True)
         computers = relationship("Computer", backref="person")
+        computers_owned = relationship("Computer")
     yield Person
 
 
@@ -131,6 +132,7 @@ def person_schema():
                                  schema='ComputerSchema',
                                  type_='computer',
                                  many=True)
+        computers_owned = computers
     yield PersonSchema
 
 
@@ -370,6 +372,7 @@ def register_routes(client, app, api_blueprint, person_list, person_detail, pers
     api.route(person_list, 'person_list', '/persons')
     api.route(person_detail, 'person_detail', '/persons/<int:person_id>')
     api.route(person_computers, 'person_computers', '/persons/<int:person_id>/relationships/computers')
+    api.route(person_computers, 'person_computers_owned', '/persons/<int:person_id>/relationships/computers-owned')
     api.route(person_computers, 'person_computers_error', '/persons/<int:person_id>/relationships/computer')
     api.route(person_gender, 'person_gender', '/persons/<int:person_id>/relationships/gender')
     api.route(person_list_raise_jsonapiexception, 'person_list_jsonapiexception', '/persons_jsonapiexception')
@@ -1718,3 +1721,8 @@ def test_api_resources(app, person_list):
     api = Api()
     api.route(person_list, 'person_list2', '/persons', '/person_list')
     api.init_app(app)
+
+
+def test_relationship_containing_hyphens(client, register_routes, person_computers, computer_schema, person):
+    response = client.get('/persons/{}/relationships/computers-owned'.format(person.person_id), content_type='application/vnd.api+json')
+    assert response.status_code == 200
