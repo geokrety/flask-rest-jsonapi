@@ -51,6 +51,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
         self.session.add(obj)
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Object creation error: " + str(e), source={'pointer': '/data'})
@@ -145,6 +148,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Update object error: " + str(e), source={'pointer': '/data'})
@@ -168,6 +174,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
         self.session.delete(obj)
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Delete object error: " + str(e))
@@ -231,6 +240,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Create relationship error: " + str(e))
@@ -339,6 +351,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Update relationship error: " + str(e))
@@ -385,6 +400,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except JsonApiException as e:
+            self.session.rollback()
+            raise e
         except Exception as e:
             self.session.rollback()
             raise JsonApiException("Delete relationship error: " + str(e))
