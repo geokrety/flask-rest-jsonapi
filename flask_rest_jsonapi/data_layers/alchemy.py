@@ -16,6 +16,8 @@ from flask_rest_jsonapi.exceptions import RelationNotFound, RelatedObjectNotFoun
 from flask_rest_jsonapi.data_layers.filtering.alchemy import create_filters
 from flask_rest_jsonapi.schema import get_model_field, get_related_schema, get_relationships, get_schema_field
 
+from geokrety_api_exceptions import GKUnprocessableEntity
+
 
 class SqlalchemyDataLayer(BaseDataLayer):
     """Sqlalchemy data layer"""
@@ -51,6 +53,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
         self.session.add(obj)
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e
@@ -148,6 +153,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e
@@ -174,6 +182,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
         self.session.delete(obj)
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e
@@ -240,6 +251,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e
@@ -351,6 +365,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e
@@ -400,6 +417,9 @@ class SqlalchemyDataLayer(BaseDataLayer):
 
         try:
             self.session.commit()
+        except GKUnprocessableEntity as e:
+            self.session.rollback()
+            raise e
         except JsonApiException as e:
             self.session.rollback()
             raise e

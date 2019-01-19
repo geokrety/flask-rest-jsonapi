@@ -3,3 +3,4 @@ Flask>=0.11
 marshmallow==2.13.1
 marshmallow_jsonapi
 sqlalchemy
+geokrety-api-exceptions
